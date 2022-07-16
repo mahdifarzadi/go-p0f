@@ -19,17 +19,19 @@ func New(socketAddress string) (*p0f, error) {
 	}, nil
 }
 
-func (p0f *p0f) Query(ip string) {
+func (p0f *p0f) Query(ip string) (*hostInfo, error) {
 	// prepare data
 	p := preparePacket(ip)
-	fmt.Println(p)
 
 	// send data
 	packet, err := send(p0f.conn, p)
-	fmt.Println(packet, err)
+	if err != nil {
+		return nil, err
+	}
 
 	// parse received data
 	result := &hostInfo{}
 	packet.parse(result)
-	fmt.Println(result)
+
+	return result, nil
 }

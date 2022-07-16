@@ -102,7 +102,6 @@ func send(conn net.Conn, packet *sendPacket) (*recvPacket, error) {
 
 	// convert recvData to recvPacket
 	buf := bytes.NewReader(recvData[0:recvLen])
-	fmt.Println("buf:", buf)
 	recvPacket := &recvPacket{}
 	err = binary.Read(buf, binary.BigEndian, recvPacket)
 	if err != nil {

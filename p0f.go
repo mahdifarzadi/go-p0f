@@ -18,3 +18,16 @@ func New(socketAddress string) (*p0f, error) {
 		conn: conn,
 	}, nil
 }
+
+func (p0f *p0f) Query(ip string) {
+	// prepare data
+	p := preparePacket(ip)
+	fmt.Println(p)
+
+	// send data
+	packet, err := send(p0f.conn, p)
+	fmt.Println(packet, err)
+
+	// parse response to model
+
+}

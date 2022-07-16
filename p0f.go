@@ -5,6 +5,10 @@ import (
 	"net"
 )
 
+type Client interface {
+	Query(ip string) (*hostInfo, error)
+}
+
 type p0f struct {
 	conn net.Conn
 }

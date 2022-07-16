@@ -28,6 +28,8 @@ func (p0f *p0f) Query(ip string) {
 	packet, err := send(p0f.conn, p)
 	fmt.Println(packet, err)
 
-	// parse response to model
-
+	// parse received data
+	result := &hostInfo{}
+	packet.parse(result)
+	fmt.Println(result)
 }

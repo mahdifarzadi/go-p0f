@@ -22,6 +22,8 @@ var (
 	//P0F_QUERY_MAGIC = [...]byte{0x1, 0x46, 0x30, 0x50} //0x50304601
 	sendMagic = [...]byte{0x1, 0x46, 0x30, 0x50} //0x50304601
 	recvMagic = [...]byte{0x2, 0x46, 0x30, 0x50} //0x50304602
+
+	stringFields = []string{""}
 )
 
 type sendPacket struct {
@@ -49,6 +51,16 @@ type recvPacket struct {
 	HttpFlavor [32]byte // version of the HTTP application, if any
 	LinkType   [32]byte // network link type, if recognized
 	Language   [32]byte // system language, if recognized
+}
+
+type hostInfo struct {
+	OsName   string
+	OsFlavor string
+}
+
+func (p *recvPacket) parse(hi *hostInfo) {
+	hi.OsName = fmt.Sprintf("%s", p.OsName)
+	hi.OsFlavor = fmt.Sprintf("%s", p.OsFlavor)
 }
 
 func preparePacket(ipv4 string) *sendPacket {

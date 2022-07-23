@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"strings"
 )
 
 const (
@@ -59,8 +60,8 @@ type hostInfo struct {
 }
 
 func (p *recvPacket) parse(hi *hostInfo) {
-	hi.OsName = fmt.Sprintf("%s", p.OsName)
-	hi.OsFlavor = fmt.Sprintf("%s", p.OsFlavor)
+	hi.OsName = strings.Trim(fmt.Sprintf("%s", p.OsName), "\000")
+	hi.OsFlavor = strings.Trim(fmt.Sprintf("%s", p.OsFlavor), "\000")
 }
 
 func preparePacket(ipv4 string) *sendPacket {

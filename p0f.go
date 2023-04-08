@@ -10,16 +10,12 @@ type Client interface {
 }
 
 type p0f struct {
-	conn net.Conn
+	addr string
 }
 
 func New(socketAddress string) (*p0f, error) {
-	conn, err := net.Dial("unix", socketAddress)
-	if err != nil {
-		return nil, fmt.Errorf("initializing p0f client: %w", err)
-	}
 	return &p0f{
-		conn: conn,
+		addr: socketAddress,
 	}, nil
 }
 
@@ -27,8 +23,14 @@ func (p0f *p0f) Query(ip string) (*hostInfo, error) {
 	// prepare data
 	p := preparePacket(ip)
 
+	conn, err := p0f.connect()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
 	// send data
-	packet, err := send(p0f.conn, p)
+	packet, err := send(conn, p)
 	if err != nil {
 		return nil, err
 	}
@@ -38,4 +40,13 @@ func (p0f *p0f) Query(ip string) (*hostInfo, error) {
 	packet.parse(result)
 
 	return result, nil
+}
+
+func (p0f *p0f) connect() (net.Conn, error) {
+	// todo implement connection pool
+	conn, err := net.Dial("unix", p0f.addr)
+	if err != nil {
+		return nil, fmt.Errorf("initializing p0f client: %w", err)
+	}
+	return conn, nil
 }
